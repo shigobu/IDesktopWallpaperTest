@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IDesktopWallpaperTest
+namespace Wallpaper
 {
     class Program
     {
@@ -13,7 +13,8 @@ namespace IDesktopWallpaperTest
             DesktopWallpaper wallpaper = new DesktopWallpaper();
 
             string imageLocation = @"C:\Windows\Web\Wallpaper\Theme2\img11.jpg";
-            string monitorDevicePath = wallpaper.GetMonitorDevicePathAt(0);
+            uint monitorCount = wallpaper.GetMonitorDevicePathCount();
+            string monitorDevicePath = wallpaper.GetMonitorDevicePathAt(1);
 
             wallpaper.SetWallpaper(monitorDevicePath, imageLocation);
 
