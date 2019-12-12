@@ -35,31 +35,49 @@ namespace ChangeWallpaper
 			if (File.Exists(settingFilePath))
 			{
 				string[] settingFileData = File.ReadAllLines(settingFilePath);
-				if (settingFileData.Length <= 0)
-				{
-					return null;
+				if (settingFileData.Length == 0)
+				{					
+					//設定ファイルが異常な場合、改めて作成。
+					return CreateSettigFile(settingFilePath);
 				}
-				return settingFileData[0];
+				else if (!Directory.Exists(settingFileData[0]))
+				{
+					return CreateSettigFile(settingFilePath);
+				}
+				else
+				{
+					return settingFileData[0];
+				}
 			}
 			else
 			{
-				var dialog = new CommonOpenFileDialog("フォルダーの選択");
-
-				// 選択形式をフォルダースタイルにする IsFolderPicker プロパティを設定
-				dialog.IsFolderPicker = true;
-
-				string wallpaperDirectory = null;
-				if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-				{
-					wallpaperDirectory = dialog.FileName;
-					using (StreamWriter writer = new StreamWriter(settingFilePath, false))
-					{
-						writer.WriteLine(wallpaperDirectory);
-					}
-				}
-
-				return wallpaperDirectory;
+				return CreateSettigFile(settingFilePath);
 			}
+		}
+
+		/// <summary>
+		/// フォルダ選択ダイアログを表示し、フォルダの入力を促す。入力されたフォルダパスを設定ファイルに保存する。
+		/// </summary>
+		/// <param name="settingFilePath"></param>
+		/// <returns></returns>
+		static string CreateSettigFile(string settingFilePath)
+		{
+			var dialog = new CommonOpenFileDialog("フォルダーの選択");
+
+			// 選択形式をフォルダースタイルにする IsFolderPicker プロパティを設定
+			dialog.IsFolderPicker = true;
+
+			string wallpaperDirectory = null;
+			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+			{
+				wallpaperDirectory = dialog.FileName;
+				using (StreamWriter writer = new StreamWriter(settingFilePath, false))
+				{
+					writer.WriteLine(wallpaperDirectory);
+				}
+			}
+
+			return wallpaperDirectory;
 		}
 	}
 }
