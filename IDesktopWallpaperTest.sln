@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDesktopWallpaperTest", "ID
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopWallpaper", "DesktopWallpaper\DesktopWallpaper.csproj", "{F1E2711A-DCBB-4C68-B32B-95D52C927004}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeWallpaper", "ChangeWallpaper\ChangeWallpaper.csproj", "{1980B5C6-9FAE-4FBF-BCBF-491B3996275F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F1E2711A-DCBB-4C68-B32B-95D52C927004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1E2711A-DCBB-4C68-B32B-95D52C927004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1E2711A-DCBB-4C68-B32B-95D52C927004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1980B5C6-9FAE-4FBF-BCBF-491B3996275F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1980B5C6-9FAE-4FBF-BCBF-491B3996275F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1980B5C6-9FAE-4FBF-BCBF-491B3996275F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1980B5C6-9FAE-4FBF-BCBF-491B3996275F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
