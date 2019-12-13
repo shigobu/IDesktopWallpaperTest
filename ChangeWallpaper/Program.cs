@@ -24,7 +24,9 @@ namespace ChangeWallpaper
                 {
                     throw new Exception("壁紙格納フォルダの取得に失敗しました。");
                 }
-                MessageBox.Show(wallpaperDirectory);
+                string[] fileNames = Directory.GetFiles(wallpaperDirectory);
+                string[] imageFileNames = ExcludeFileUnusableInWallpaper(fileNames);
+                
 
                 //正常終了したらログファイルを削除する。
                 if (File.Exists(LogFilePath))
@@ -44,10 +46,11 @@ namespace ChangeWallpaper
 
         #region プロパティ
         static string _appPath = null;
+
         /// <summary>
         /// 自分のexeフルパス
         /// </summary>
-        static string AppPath
+        private static string AppPath
         {
             get
             {
@@ -62,7 +65,7 @@ namespace ChangeWallpaper
         /// <summary>
         /// 自分のexeのあるフォルダ
         /// </summary>
-        static string AppDirectory
+        private static string AppDirectory
         {
             get
             {
@@ -73,7 +76,7 @@ namespace ChangeWallpaper
         /// <summary>
         /// 設定ファイルのパス
         /// </summary>
-        static string SettingFilePath
+        private static string SettingFilePath
         {
             get
             {
@@ -84,21 +87,30 @@ namespace ChangeWallpaper
         /// <summary>
         /// ログファイルパス
         /// </summary>
-        static string LogFilePath
+        private static string LogFilePath
         {
             get
             {
                 return Path.Combine(AppDirectory, "log.txt");
             }
         }
+
+        private static string[] FileExtensionUsableInWallpaper
+        {
+            get
+            {
+                return new string[] { ".jpg", ".jpeg", ".bmp", ".dib", ".png", ".jfif", ".jpe", ".gif", ".tif", ".tiff", ".wdp" };
+            }
+        }
         #endregion
 
+        #region メソッド
         /// <summary>
         /// 壁紙を格納しているディレクトリを返します。
         /// 設定されていない場合は、場所の指定をします。
         /// </summary>
         /// <returns></returns>
-        static string GetWallpaperDirectory()
+        private static string GetWallpaperDirectory()
 		{
 			if (File.Exists(SettingFilePath))
 			{
@@ -123,12 +135,12 @@ namespace ChangeWallpaper
 			}
 		}
 
-		/// <summary>
-		/// フォルダ選択ダイアログを表示し、フォルダの入力を促す。入力されたフォルダパスを設定ファイルに保存する。
-		/// </summary>
-		/// <param name="settingFilePath"></param>
-		/// <returns></returns>
-		static string CreateSettigFile(string settingFilePath)
+        /// <summary>
+        /// フォルダ選択ダイアログを表示し、フォルダの入力を促す。入力されたフォルダパスを設定ファイルに保存する。
+        /// </summary>
+        /// <param name="settingFilePath"></param>
+        /// <returns></returns>
+        private static string CreateSettigFile(string settingFilePath)
 		{
             var dialog = new CommonOpenFileDialog("フォルダーの選択")
             {
@@ -137,17 +149,42 @@ namespace ChangeWallpaper
                 InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
             };
 
-            string wallpaperDirectory = null;
-			if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
 			{
-				wallpaperDirectory = dialog.FileName;
-				using (StreamWriter writer = new StreamWriter(settingFilePath, false))
+                string wallpaperDirectory = dialog.FileName;
+                using (StreamWriter writer = new StreamWriter(settingFilePath, false))
 				{
 					writer.WriteLine(wallpaperDirectory);
 				}
+			    return wallpaperDirectory;
 			}
-
-			return wallpaperDirectory;
+            else
+            {
+                throw new Exception("フォルダ選択がキャンセルされました。");
+            }
 		}
-	}
+
+        /// <summary>
+        /// 壁紙に使えないファイルを除外します。
+        /// </summary>
+        /// <param name="fileNames">ファイル名を格納している配列</param>
+        /// <returns></returns>
+        private static string[] ExcludeFileUnusableInWallpaper(string[] fileNames)
+        {
+            List<string> imageFiles = new List<string>();
+
+            foreach (string item in fileNames)
+            {
+                bool isUsable = Array.IndexOf(FileExtensionUsableInWallpaper, Path.GetExtension(item)) >= 0;
+                if (isUsable)
+                {
+                    imageFiles.Add(item);
+                }
+            }
+
+            return imageFiles.ToArray();
+        }
+
+        #endregion
+    }
 }
