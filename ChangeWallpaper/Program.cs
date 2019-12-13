@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using Wallpaper;
 
 namespace ChangeWallpaper
 {
@@ -26,7 +27,23 @@ namespace ChangeWallpaper
                 }
                 string[] fileNames = Directory.GetFiles(wallpaperDirectory);
                 string[] imageFileNames = ExcludeFileUnusableInWallpaper(fileNames);
-                
+
+                //現在設定されている壁紙を取得する。
+                DesktopWallpaper wallpaper = new DesktopWallpaper();
+                uint monitorCount = wallpaper.GetMonitorDevicePathCount();
+                string lastMonitorId = wallpaper.GetMonitorDevicePathAt(monitorCount - 1);
+                string currentWallpaperFilename = wallpaper.GetWallpaper(lastMonitorId);
+
+                //現在の壁紙が何番目か調べる。
+                int currentWallpaperNum = Array.IndexOf(imageFileNames, currentWallpaperFilename);
+
+                int wallpaperFileIndex = currentWallpaperNum;
+                for (int i = 0; i < monitorCount; i++)
+                {
+                    wallpaperFileIndex = GetNextIndex(wallpaperFileIndex, imageFileNames.Length);
+                    string monitorId = wallpaper.GetMonitorDevicePathAt((uint)i);
+                    wallpaper.SetWallpaper(monitorId, imageFileNames[wallpaperFileIndex]);
+                }
 
                 //正常終了したらログファイルを削除する。
                 if (File.Exists(LogFilePath))
@@ -95,7 +112,10 @@ namespace ChangeWallpaper
             }
         }
 
-        private static string[] FileExtensionUsableInWallpaper
+        /// <summary>
+        /// 壁紙に使える拡張子一覧
+        /// </summary>
+        private static string[] FileExtensionsUsableInWallpaper
         {
             get
             {
@@ -175,7 +195,7 @@ namespace ChangeWallpaper
 
             foreach (string item in fileNames)
             {
-                bool isUsable = Array.IndexOf(FileExtensionUsableInWallpaper, Path.GetExtension(item)) >= 0;
+                bool isUsable = Array.IndexOf(FileExtensionsUsableInWallpaper, Path.GetExtension(item).ToLower()) >= 0;
                 if (isUsable)
                 {
                     imageFiles.Add(item);
@@ -185,6 +205,22 @@ namespace ChangeWallpaper
             return imageFiles.ToArray();
         }
 
+        /// <summary>
+        /// インデックスを進めます。
+        /// 最後のインデックスが指定された場合、0を返します。
+        /// </summary>
+        /// <param name="index">インデックス</param>
+        /// <param name="length">配列長さ</param>
+        /// <returns></returns>
+        private static int GetNextIndex(int index, int length)
+        {
+            index++;
+            if (index >= length)
+            {
+                index = 0;
+            }
+            return index;
+        }
         #endregion
     }
 }

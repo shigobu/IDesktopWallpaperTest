@@ -81,5 +81,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DesktopWallpaper\DesktopWallpaper.csproj">
+      <Project>{f1e2711a-dcbb-4c68-b32b-95d52c927004}</Project>
+      <Name>DesktopWallpaper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
