@@ -133,7 +133,8 @@ namespace ChangeWallpaper
             var dialog = new CommonOpenFileDialog("フォルダーの選択")
             {
                 // 選択形式をフォルダースタイルにする IsFolderPicker プロパティを設定
-                IsFolderPicker = true
+                IsFolderPicker = true,
+                InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
             };
 
             string wallpaperDirectory = null;
