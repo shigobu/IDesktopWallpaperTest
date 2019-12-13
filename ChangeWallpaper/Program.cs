@@ -16,7 +16,7 @@ namespace ChangeWallpaper
 		/// アプリケーションのメイン エントリ ポイントです。
 		/// </summary>
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
             try
             {
@@ -25,8 +25,13 @@ namespace ChangeWallpaper
                 {
                     throw new Exception("壁紙格納フォルダの取得に失敗しました。");
                 }
+
                 string[] fileNames = Directory.GetFiles(wallpaperDirectory);
                 string[] imageFileNames = ExcludeFileUnusableInWallpaper(fileNames);
+                if (imageFileNames.Length == 0)
+                {
+                    throw new Exception("壁紙に使えるファイルが見つかりませんでした。");
+                }
 
                 //現在設定されている壁紙を取得する。
                 DesktopWallpaper wallpaper = new DesktopWallpaper();
@@ -37,6 +42,7 @@ namespace ChangeWallpaper
                 //現在の壁紙が何番目か調べる。
                 int currentWallpaperNum = Array.IndexOf(imageFileNames, currentWallpaperFilename);
 
+                //壁紙を変更する
                 int wallpaperFileIndex = currentWallpaperNum;
                 for (int i = 0; i < monitorCount; i++)
                 {
