@@ -60,7 +60,7 @@ namespace ChangeWallpaper
                 List<string> logMessage = new List<string>();
                 logMessage.Add(DateTime.Now.ToLongDateString());
                 logMessage.Add(DateTime.Now.ToLongTimeString());
-                logMessage.Add(ex.Message);
+                logMessage.Add(ex.ToString());
                 File.WriteAllLines(LogFilePath, logMessage.ToArray());
 
                 //設定ファイル削除
