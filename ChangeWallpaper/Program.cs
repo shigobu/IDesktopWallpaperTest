@@ -52,20 +52,21 @@ namespace ChangeWallpaper
                 }
 
                 //正常終了したらログファイルを削除する。
-                if (File.Exists(LogFilePath))
-                {
-                    File.Delete(LogFilePath);
-                }
+                File.Delete(LogFilePath);
             }
             catch (Exception ex)
             {
+                //ログ出力
                 List<string> logMessage = new List<string>();
                 logMessage.Add(DateTime.Now.ToLongDateString());
                 logMessage.Add(DateTime.Now.ToLongTimeString());
                 logMessage.Add(ex.Message);
-                File.WriteAllLines(LogFilePath, logMessage.ToArray());                
+                File.WriteAllLines(LogFilePath, logMessage.ToArray());
+
+                //設定ファイル削除
+                File.Delete(SettingFilePath);
             }
-		}
+        }
 
         #region プロパティ
         static string _appPath = null;
